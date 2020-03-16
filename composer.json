@@ -1,0 +1,38 @@
+{
+    "name": "quasar/search-engine",
+    "description": "Quasar Search Engine package",
+    "keywords": [
+        "syscover",
+        "pulsar",
+        "quasar",
+        "laravel",
+        "intranet",
+        "search engine",
+        "nimbl"
+    ],
+    "authors": [
+        {
+            "name": "Jose Carlos Rodríguez Palacín",
+            "email": "carlos.rodriguez@techedgegroup.com"
+        }
+    ],
+    "require": {
+        "php": "^7.3",
+        "laravel/scout": "^8.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Quasar\\SearchEngine\\": "src/Quasar/SearchEngine"
+        },
+        "classmap": [
+            "src/Quasar/SearchEngine"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Quasar\\SearchEngine\\SearchEngineServiceProvider"
+            ]
+        }
+    }
+}
