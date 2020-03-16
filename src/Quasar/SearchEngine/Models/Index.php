@@ -10,7 +10,7 @@ use Quasar\Core\Models\CoreModel;
 class Index extends CoreModel
 {
     protected $table        = 'search_engine_index';
-    protected $fillable     = ['uuid', 'indexable_type', 'idexable_uuid', 'permission_uuid', 'meta'];
+    protected $fillable     = ['uuid', 'permissionUuid', 'indexableType', 'indexableUuid', 'url', 'title', 'headers', 'strong', 'content'];
 
     public function indexable()
     {

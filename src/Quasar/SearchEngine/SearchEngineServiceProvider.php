@@ -1,4 +1,4 @@
-<?php namespace Quasar\Admin;
+<?php namespace Quasar\SearchEngine;
 
 use Illuminate\Support\ServiceProvider;
 use Laravel\Scout\EngineManager;

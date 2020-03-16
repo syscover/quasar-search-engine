@@ -3,17 +3,29 @@
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
 use Quasar\SearchEngine\Models\Index;
+use Quasar\SearchEngine\Services\IndexService;
 use Illuminate\Database\Eloquent\Collection;
 
 class SearchEngine extends Engine
 {
     public function update($models)
     {
-        $modelsIndexed = Index::whereIn('indexable_uuid', $models->pluck('uuid'));
-
+        // get current index from models records
+        $modelsIndexed  = Index::whereIn('indexable_uuid', $models->pluck('uuid'))->get();
+        $indexService   = new IndexService;
+        
         foreach ($models as $model)
         {
-
+            // find existing index
+            $modelIndexed = $modelsIndexed->where('indexableUuid', $model->uuid)->first();
+            if ($modelIndexed)
+            {
+                $indexService->update($model->toIndexableArray(), $modelIndexed->uuid);
+            }
+            else
+            {
+                $indexService->create($model->toIndexableArray());
+            }
         }
     }
 
