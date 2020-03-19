@@ -1,13 +1,25 @@
 <?php namespace Quasar\SearchEngine\Engines;
 
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Builder;
 use Laravel\Scout\Engines\Engine;
+use Quasar\SearchEngine\Engines\Modes\ModeContainer;
 use Quasar\SearchEngine\Models\Index;
 use Quasar\SearchEngine\Services\IndexService;
-use Illuminate\Database\Eloquent\Collection;
 
 class SearchEngine extends Engine
 {
+    protected $mode;
+
+    protected $fallbackMode;
+
+    public function __construct(ModeContainer $modeContainer)
+    {
+        $this->mode         = $modeContainer->mode;
+        $this->fallbackMode = $modeContainer->fallbackMode;
+    }
+
     public function update($models)
     {
         // get current index from models records
@@ -16,15 +28,19 @@ class SearchEngine extends Engine
         
         foreach ($models as $model)
         {
-            // find existing index
-            $modelIndexed = $modelsIndexed->where('indexableUuid', $model->uuid)->first();
-            if ($modelIndexed)
+            // avoid index itself
+            if (get_class($model) !== 'Quasar\SearchEngine\Models\Index')
             {
-                $indexService->update($model->toIndexableArray(), $modelIndexed->uuid);
-            }
-            else
-            {
-                $indexService->create($model->toIndexableArray());
+                // find existing index
+                $modelIndexed = $modelsIndexed->where('indexableUuid', $model->uuid)->first();
+                if ($modelIndexed)
+                {
+                    $indexService->update($model->toIndexableArray(), $modelIndexed->uuid);
+                }
+                else
+                {
+                    $indexService->create($model->toIndexableArray());
+                }
             }
         }
     }
@@ -78,11 +94,14 @@ class SearchEngine extends Engine
 
         $model = $builder->model;
         $query = $model::whereRaw($whereRawString, $params);
-        if ($mode->isFullText()) {
+        
+        if ($mode->isFullText()) 
+        {
             $query = $query->selectRaw(DB::raw($mode->buildSelectColumns($builder)), $params);
         }
 
-        if($builder->callback){
+        if($builder->callback)
+        {
             $query = call_user_func($builder->callback, $query, $this);
         }
 
@@ -94,11 +113,10 @@ class SearchEngine extends Engine
             }
         }
 
-        if ($builder->limit) {
-            $query = $query->take($builder->limit);
-        }
+        if ($builder->limit) $query = $query->take($builder->limit);
 
-        if (property_exists($builder, 'offset') && $builder->offset) {
+        if (property_exists($builder, 'offset') && $builder->offset) 
+        {
             $query = $query->skip($builder->offset);
         }
 
@@ -164,5 +182,11 @@ class SearchEngine extends Engine
     protected function shouldNotRun($builder)
     {
         return strlen($builder->query) < config('quasar-search-engine.min_search_length');
+    }
+
+    protected function shouldUseFallback($builder)
+    {
+        return $this->mode->isFullText() && 
+            strlen($builder->query) < config('quasar-search-engine.min_fulltext_search_length');
     }
 }

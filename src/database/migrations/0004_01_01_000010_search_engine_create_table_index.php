@@ -22,11 +22,11 @@ class SearchEngineCreateTableIndex extends Migration
                 $table->uuid('permission_uuid')->nullable();
                 $table->string('indexable_type')->nullable();
                 $table->uuid('indexable_uuid')->nullable();
-                $table->string('url');
-                $table->string('title')->nullable();
-                $table->string('headers')->nullable();
-                $table->string('strong')->nullable();
-                $table->text('content');
+                $table->string('url', 511);
+                $table->string('title', 511);
+                $table->text('content_layer_1')->nullable();
+                $table->text('content_layer_2')->nullable();
+                $table->text('content_layer_3')->nullable();
                 $table->timestamps();
 
                 $table->index('uuid', 'search_engine_index_uuid_idx');
@@ -38,7 +38,7 @@ class SearchEngineCreateTableIndex extends Migration
 					->onUpdate('cascade');
             });
 
-            DB::statement('ALTER TABLE search_engine_index ADD FULLTEXT search_engine(url, title, headers, strong, content)'); 
+            DB::statement('ALTER TABLE search_engine_index ADD FULLTEXT search_engine(url, title, content_layer_1, content_layer_2, content_layer_3)'); 
 		}
 	}
 

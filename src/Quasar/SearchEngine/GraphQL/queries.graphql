@@ -1,0 +1,2 @@
+# Search
+searchEngineSearch(query: String): JSON @field(resolver: "Quasar\\SearchEngine\\GraphQL\\Resolvers\\IndexResolver@search")

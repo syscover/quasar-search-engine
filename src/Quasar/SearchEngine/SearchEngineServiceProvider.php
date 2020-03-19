@@ -1,8 +1,10 @@
 <?php namespace Quasar\SearchEngine;
 
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Str;
 use Laravel\Scout\EngineManager;
 use Quasar\SearchEngine\Engines\SearchEngine;
+use Quasar\SearchEngine\Engines\Modes\ModeContainer;
 
 class SearchEngineServiceProvider extends ServiceProvider
 {
@@ -33,7 +35,7 @@ class SearchEngineServiceProvider extends ServiceProvider
         ], 'config');
 
         resolve(EngineManager::class)->extend('quasar-search', function () {
-            return new SearchEngine;
+            return new SearchEngine(app(ModeContainer::class));
         });
 
         // register events and listener predefined
@@ -47,6 +49,10 @@ class SearchEngineServiceProvider extends ServiceProvider
 	 */
 	public function register()
 	{
-        //
+        $engineNamespace    = 'Quasar\\SearchEngine\\Engines\\Modes\\';
+        $mode               = $engineNamespace.Str::studly(strtolower(config('quasar-search-engine.mode')));
+        $fallbackMode       = $engineNamespace.Str::studly(strtolower(config('quasar-search-engine.min_fulltext_search_fallback')));
+
+        return new ModeContainer(new $mode(), new $fallbackMode());
 	}
 }

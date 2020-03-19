@@ -7,7 +7,7 @@ class ModeContainer
 
     public function __construct($mode, $fallbackMode)
     {
-        $this->mode = $mode;
+        $this->mode         = $mode;
         $this->fallbackMode = $fallbackMode;
     }
 }
