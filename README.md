@@ -19,3 +19,13 @@ php artisan vendor:publish --provider="Laravel\Scout\ScoutServiceProvider"
 ```
 SCOUT_DRIVER=quasar-search
 ```
+
+**4 - Add graphQL routes to graphql/schema.graphql file**
+```
+type Query {
+    # others imports
+
+    # Search Engine
+    #import ./../vendor/quasar/search-engine/src/Quasar/SearchEngine/GraphQL/queries.graphql
+}
+```
