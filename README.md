@@ -1,6 +1,7 @@
 # Quasar Search Engine
 
-[![Total Downloads](https://poser.pugx.org/syscover/quasar-search-engine/downloads)](https://packagist.org/packages/syscover/quasar-search-engine)
+[![Total Downloads](https://poser.pugx.org/syscover/quasar/search-engine/downloads)](https://packagist.org/packages/syscover/quasar/search-engine)
+[![Latest Stable Version](http://img.shields.io/github/release/syscover/quasar-search-engine.svg)](https://packagist.org/packages/quasar/search-engine)
 
 ## Installation
 
