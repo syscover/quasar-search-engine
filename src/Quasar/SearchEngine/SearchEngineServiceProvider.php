@@ -44,8 +44,9 @@ class SearchEngineServiceProvider extends ServiceProvider
 	public function register()
 	{
         $engineNamespace    = 'Quasar\\SearchEngine\\Engines\\Modes\\';
-        $mode               = $engineNamespace.Str::studly(strtolower(config('quasar-search-engine.mode')));
-        $fallbackMode       = $engineNamespace.Str::studly(strtolower(config('quasar-search-engine.min_fulltext_search_fallback')));
+        $mode               = $engineNamespace . Str::studly(strtolower(config('quasar-search-engine.mode', 'NATURAL_LANGUAGE')));
+        // TODO, create mode LIKE, https://github.com/yabhq/laravel-scout-mysql-drive
+        $fallbackMode       = $engineNamespace . Str::studly(strtolower(config('quasar-search-engine.min_fulltext_search_fallback', 'NATURAL_LANGUAGE')));
 
         return new ModeContainer(new $mode(), new $fallbackMode());
 	}
